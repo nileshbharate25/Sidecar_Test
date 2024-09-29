@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Kubernetes Class by Saikiran Pinapathruni</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #333;
+        }
+        #gameCanvas {
+            border: 1px solid #000;
+            background-color: #fff;
+            margin: 20px auto;
+            display: block;
+        }
+        #score {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Kubernetes Class by Saikiran Pinapathruni</h1>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="score">Score: 0</div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let score = 0;
+
+        const target = {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: 20,
+            dx: 2,
+            dy: 2
+        };
+
+        function drawTarget() {
+            ctx.beginPath();
+            ctx.arc(target.x, target.y, target.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'red';
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function updateTarget() {
+            target.x += target.dx;
+            target.y += target.dy;
+
+            if (target.x + target.radius > canvas.width || target.x - target.radius < 0) {
+                target.dx *= -1;
+            }
+            if (target.y + target.radius > canvas.height || target.y - target.radius < 0) {
+                target.dy *= -1;
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTarget();
+            updateTarget();
+            requestAnimationFrame(draw);
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            const dist = Math.sqrt((mouseX - target.x) ** 2 + (mouseY - target.y) ** 2);
+            if (dist < target.radius) {
+                score++;
+                document.getElementById('score').innerText = `Score: ${score}`;
+                target.x = Math.random() * canvas.width;
+                target.y = Math.random() * canvas.height;
+            }
+        });
+
+        draw();
+    </script>
+</body>
+</html>
